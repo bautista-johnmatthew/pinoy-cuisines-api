@@ -1,7 +1,16 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
+from flask_flatpages import FlatPages
 import sqlite3
 
 app = Flask(__name__)
+app.config.update(
+    FLATPAGES_EXTENSION='.md',
+    FLATPAGES_ROOT='templates',
+    FLATPAGES_AUTO_RELOAD=True
+)
+documentation = FlatPages(app)
+
+# TODO: Remove this type of implementation and focus database on models.py
 DB = "pinoy_cuisine.db"
 
 def get_db_connection():
@@ -11,7 +20,8 @@ def get_db_connection():
 
 @app.route("/")
 def home():
-    return "🎉 Pinoy Cuisine API is running!"
+    global documentation
+    return render_template("index.html", pages=documentation)
 
 # GET /dishes → list all dishes
 @app.route("/dishes", methods=["GET"])
