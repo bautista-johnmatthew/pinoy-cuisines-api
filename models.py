@@ -40,6 +40,16 @@ def insert_default_data():
     cur = conn.cursor()
 
     # Insert dishes
+    cur.execute("""INSERT INTO dishes (name, classification, methodology, 
+            origin, taste_profile, description) VALUES (?, ?, ?, ?, ?, ?)""",
+            ("Adobo", "Main Dish", "Stewing", "N/A","Sour", 
+             "Stewed meat marinated in vinegar, soy sauce, and garlic."))
+    
+    latest_id = cur.lastrowid
+    cur.execute(""" INSERT INTO ingredients (dish_id, name, type) VALUES (?, ?, ?)""",
+                (latest_id, "pork", "meat"))
+    cur.execute(""" INSERT INTO ingredients (dish_id, name, type) VALUES (?, ?, ?)""",
+                (latest_id, "garlic", "vegetable"))
     # dict_results
 
     # Dishes data
@@ -91,5 +101,4 @@ def search_ingredient(search_ingredient):
 
     return search_results
 
-search_ingredient("bawang")
 
