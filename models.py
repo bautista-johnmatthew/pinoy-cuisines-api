@@ -2,13 +2,10 @@ import sqlite3
 
 DB_NAME = "pinoy_cuisine.db"
 
-def get_connection():
-    return sqlite3.connect(DB_NAME)
-
 # CREATE TABLES
 def create_tables():
     """Create the necessary tables for the Pinoy Cuisine database."""
-    conn = get_connection()
+    conn = sqlite3.connect(DB_NAME)
     cur = conn.cursor()
 
     cur.execute("""
@@ -18,8 +15,8 @@ def create_tables():
         classification TEXT NOT NULL,
         methodology TEXT NOT NULL,
         origin TEXT,
-        taste_profile TEXT,
-        description TEXT
+        taste_profile TEXT NOT NULL,
+        description TEXT NOT NULL
     )
     """)
 
@@ -39,7 +36,7 @@ def create_tables():
 
 def insert_default_data():
     """Insert default data into the dishes and ingredients tables."""
-    conn = get_connection()
+    conn = sqlite3.connect(DB_NAME)
     cur = conn.cursor()
 
     # Insert dishes
@@ -49,4 +46,8 @@ def insert_default_data():
 
     conn.commit()
     conn.close()
+
     print("✅ Default data inserted successfully.")
+
+create_tables()
+insert_default_data()
