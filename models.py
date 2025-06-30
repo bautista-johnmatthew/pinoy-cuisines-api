@@ -79,3 +79,17 @@ def search_dish(id):
 
     return dict_results
 
+def search_ingredient(search_ingredient):
+    """ Search for dishes that contain a specific ingredient """
+    conn = sqlite3.connect(CUISINE_DB)
+    cur = conn.cursor()
+    dishes = []
+    query = "SELECT dish_id FROM ingredients WHERE name = LOWER(?)"
+    search_results = cur.execute(query, (search_ingredient,)).fetchall()
+
+    conn.close()
+
+    return search_results
+
+search_ingredient("bawang")
+
