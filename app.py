@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, render_template
 from flask_flatpages import FlatPages
 import sqlite3
-from models import CUISINE_DB, search_dish, view_all_records, search_ingredient
+from models import CUISINE_DB, search_dish, view_all_records, search_ingredient, add_dish
 
 app = Flask(__name__)
 app.config.update(
@@ -24,11 +24,19 @@ def home():
 # Main GET route: List all dishes
 @app.route('/dishes', methods=['GET', 'POST' ])
 def get_dishes():
-    
     if request.method == 'GET':
         return jsonify(view_all_records())
     
-    return jsonify({'IN MAINTENANCE'})
+    content = request.json
+    result = add_dish(content['name'], content['classification'], 
+            content['methodology'], content['origin'], content['taste_profile'], 
+            content['description'], content['ingredients'])
+    
+    if result == 0:
+        return jsonify({'error', 'Dish cannot be added'}), 500
+
+    return jsonify({'message' : "Dish added successfully", 
+            'contents' : search_dish(result), 'location' : f"dishes/{result}"}), 201
 
 # GET route for a specific dish by title (dynamic routing)
 @app.route('/dishes/<string:dish_name>', methods=['GET'])
