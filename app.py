@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template
 from flask_flatpages import FlatPages
 import sqlite3
 from models import CUISINE_DB, search_dish
