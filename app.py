@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, render_template
 from flask_flatpages import FlatPages
 import sqlite3
-from models import CUISINE_DB, search_dish
+from models import CUISINE_DB, search_dish, view_all_records
 
 app = Flask(__name__)
 app.config.update(
@@ -24,12 +24,7 @@ def home():
 # Main GET route: List all dishes
 @app.route('/dishes', methods=['GET'])
 def get_dishes():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM dishes")
-    rows = cur.fetchall()
-    conn.close()
-    return jsonify([dict(row) for row in rows])
+    return jsonify(view_all_records)
 
 # GET route for a specific dish by title (dynamic routing)
 @app.route('/dishes/<string:dish_name>', methods=['GET'])

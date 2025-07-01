@@ -101,4 +101,43 @@ def search_ingredient(search_ingredient):
 
     return search_results
 
+def view_all_records():
+    conn = sqlite3.connect(CUISINE_DB)
+    cur = conn.cursor()
 
+    cur.execute("SELECT * FROM dishes")
+    dishes = cur.fetchall()
+
+    cur.execute("SELECT * FROM ingredients")
+    ingredients = cur.fetchall()
+
+    conn.close()
+
+    results = []
+
+    for dish in dishes:
+        dish_id = dish[0]
+
+        dish_dict = {
+            "name": dish[1],
+            "classification": dish[2],
+            "methodology": dish[3],
+            "origin": dish[4],
+            "taste_profile": dish[5],
+            "description": dish[6],
+            "ingredients": {
+                "meat": [],
+                "vegetable": []
+            }
+        }
+
+        for ingredient in ingredients:
+            if ingredient[1] == dish_id:
+                if ingredient[3] == "meat":
+                    dish_dict["ingredients"]["meat"].append(ingredient[2])
+                elif ingredient[3] == "vegetable":
+                    dish_dict["ingredients"]["vegetable"].append(ingredient[2])
+
+        results.append(dish_dict)
+
+    return results
