@@ -26,9 +26,9 @@ def home():
 def get_dishes():
     
     if request.method == 'GET':
-        return jsonify(view_all_records)
-    elif request.method == 'POST':
-        return jsonify({'IN MAINTENANCE'})
+        return jsonify(view_all_records())
+    
+    return jsonify({'IN MAINTENANCE'})
 
 # GET route for a specific dish by title (dynamic routing)
 @app.route('/dishes/<string:dish_name>', methods=['GET'])
@@ -44,6 +44,7 @@ def get_dish_by_title(dish_name):
     conn.close()
     return jsonify(result)
 
+# GET route for a specific dish by ID (dynamic routing)
 @app.route('/dishes/<int:dish_id>', methods=['GET'])
 def get_dish_by_id(dish_id):
     result = search_dish(dish_id)
@@ -79,6 +80,22 @@ def delete_dish(dish_name):
     conn.commit()
     conn.close()
     return jsonify({'message': f'Dish "{dish_name}" deleted successfully.'})
+
+# DELETE route: Delete a dish by ID
+@app.route('/dishes/<int:dish_id>', methods=['DELETE'])
+def delete_dish_by_id(dish_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id FROM dishes WHERE id = ?", (dish_id,))
+    dish = cur.fetchone()
+    if not dish:
+        conn.close()
+        return jsonify({'error': 'Dish not found'}), 404
+    cur.execute("DELETE FROM ingredients WHERE dish_id = ?", (dish['id'],))
+    cur.execute("DELETE FROM dishes WHERE id = ?", (dish['id'],))
+    conn.commit()
+    conn.close()
+    return jsonify({'message': f'Dish with ID {dish_id} deleted successfully.'})
 
 if __name__ == "__main__":
     app.run(debug=True)
