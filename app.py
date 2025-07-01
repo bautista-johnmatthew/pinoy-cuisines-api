@@ -1,7 +1,7 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, request, render_template
 from flask_flatpages import FlatPages
 import sqlite3
-from models import CUISINE_DB, search_dish, view_all_records
+from models import CUISINE_DB, search_dish, view_all_records, search_ingredient
 
 app = Flask(__name__)
 app.config.update(
@@ -22,9 +22,13 @@ def home():
     return render_template("index.html", pages=documentation)
 
 # Main GET route: List all dishes
-@app.route('/dishes', methods=['GET'])
+@app.route('/dishes', methods=['GET', 'POST' ])
 def get_dishes():
-    return jsonify(view_all_records)
+    
+    if request.method == 'GET':
+        return jsonify(view_all_records)
+    elif request.method == 'POST':
+        return jsonify({'IN MAINTENANCE'})
 
 # GET route for a specific dish by title (dynamic routing)
 @app.route('/dishes/<string:dish_name>', methods=['GET'])
@@ -39,6 +43,26 @@ def get_dish_by_title(dish_name):
     result = search_dish(dish['id'])
     conn.close()
     return jsonify(result)
+
+@app.route('/dishes/<int:dish_id>', methods=['GET'])
+def get_dish_by_id(dish_id):
+    result = search_dish(dish_id)
+    if not result:
+        return jsonify({'error': 'Dish not found'}), 404
+    return jsonify(result)
+
+@app.route('/ingredients/<string:ingredient_name>', methods=['GET'])
+def search_by_ingredient(ingredient_name):
+    # Find all dish_ids that use this ingredient
+    dish_ids = search_ingredient(ingredient_name)
+    if not dish_ids:
+        return jsonify({'error': 'No dishes found with that ingredient'}), 404
+    # Get full dish info for each dish_id
+    results = []
+    for row in dish_ids:
+        dish_id = row[0]
+        results.append(search_dish(dish_id))
+    return jsonify(results)
 
 # DELETE route: Delete a dish by name
 @app.route('/dishes/<string:dish_name>', methods=['DELETE'])
