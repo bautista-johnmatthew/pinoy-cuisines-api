@@ -69,6 +69,10 @@ def add_dish(name, classification, methodology, origin, taste_profile,
             (name, classification, methodology, origin, taste_profile, description))
     
     new_dish_id = cur.lastrowid
+    
+    if (new_dish_id == 0):
+        return new_dish_id
+
     for meat_value in ingredients['meat']:
         cur.execute("""INSERT INTO ingredients (dish_id, name, type) VALUES 
                 (?, ?, ?)""", (new_dish_id, meat_value, 'meat'))
@@ -76,8 +80,10 @@ def add_dish(name, classification, methodology, origin, taste_profile,
     for veggie_value in ingredients['vegetable']:
         cur.execute("""INSERT INTO ingredients (dish_id, name, type) VALUES 
                 (?, ?, ?)""", (new_dish_id, veggie_value, 'vegetable'))
+        
     conn.commit()
     conn.close()
+    return new_dish_id
 
 
 def search_dish(id):
