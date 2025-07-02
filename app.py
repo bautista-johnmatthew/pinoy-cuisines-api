@@ -24,19 +24,22 @@ def home():
 # Main GET route: List all dishes
 @app.route('/dishes', methods=['GET', 'POST' ])
 def get_dishes():
-    if request.method == 'GET':
-        return jsonify(view_all_records())
-    
-    content = request.json
-    result = add_dish(content['name'], content['classification'], 
-            content['methodology'], content['origin'], content['taste_profile'], 
-            content['description'], content['ingredients'])
-    
-    if result == 0:
-        return jsonify({'error', 'Dish cannot be added'}), 500
+    if request.method == 'POST':
+        content = request.json
+        
+        result = add_dish(content['name'], content['classification'], 
+                content['methodology'], content['origin'], 
+                content['taste_profile'], content['description'], 
+                content['ingredients'])
+        
+        if result == 0:
+            return jsonify({'error', 'Dish cannot be added'}), 500
 
-    return jsonify({'message' : "Dish added successfully", 
-            'contents' : search_dish(result), 'location' : f"dishes/{result}"}), 201
+        return jsonify({'message' : "Dish added successfully", 
+                'contents' : search_dish(result), 
+                'location' : f"dishes/{result}"}), 201
+    
+    return jsonify(view_all_records())
 
 # GET route for a specific dish by title (dynamic routing)
 @app.route('/dishes/<string:dish_name>', methods=['GET'])
