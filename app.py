@@ -109,4 +109,4 @@ def delete_dish_by_id(dish_id):
     return jsonify({'message': f'Dish with ID {dish_id} deleted successfully.'})
 
 if __name__ == "__main__":
-    app.run(debug=True, port='0.0.0.0', host=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
