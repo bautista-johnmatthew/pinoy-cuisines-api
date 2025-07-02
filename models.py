@@ -50,10 +50,7 @@ def insert_default_data():
                 (latest_id, "pork", "meat"))
     cur.execute(""" INSERT INTO ingredients (dish_id, name, type) VALUES (?, ?, ?)""",
                 (latest_id, "garlic", "vegetable"))
-    # dict_results
-
-    # Dishes data
-
+    
     conn.commit()
     conn.close()
 
@@ -127,6 +124,43 @@ def search_ingredient(search_ingredient):
     conn.close()
 
     return search_results
+
+def update_dish(dish_id, name, classification, methodology, origin, taste_profile, description, ingredients):
+    """ Update a dish details by its ID """
+    conn = sqlite3.connect(CUISINE_DB)
+    cur = conn.cursor()
+
+    # check if dish exists
+    cur.execute("SELECT id FROM dishes WHERE id = ?", (dish_id,))
+    dish = cur.fetchone()
+    if not dish:
+        conn.close()
+        return {'error': 'Dish not found'}
+
+    # update dish info based on (name, classification, methodology, origin, taste profile, description)
+    cur.execute("""
+        UPDATE dishes SET name = ?, classification = ?, methodology = ?, 
+                origin = ?, taste_profile = ?, description = ? 
+        WHERE id = ?""",
+        (name, classification, methodology, origin, taste_profile, description, dish_id,)
+    )
+
+    # Delete old ingredients
+    cur.execute("DELETE FROM ingredients WHERE dish_id = ?", (dish_id,))
+
+    # Insert new ingredients
+    for meat in ingredients.get("meat", []):
+        cur.execute("""INSERT INTO ingredients (dish_id, name, type) VALUES (?, ?, 'meat')""",
+                    (dish_id, meat))
+
+    for veggie in ingredients.get("vegetable", []):
+        cur.execute("""INSERT INTO ingredients (dish_id, name, type) VALUES (?, ?, 'vegetable')""",
+                    (dish_id, veggie))
+
+    conn.commit()
+    conn.close()
+    return {'message': f'Dish with ID {dish_id} updated successfully.'}
+
 
 def view_all_records():
     conn = sqlite3.connect(CUISINE_DB)

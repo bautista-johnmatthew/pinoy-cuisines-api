@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, render_template
 from flask_flatpages import FlatPages
 import sqlite3
-from models import CUISINE_DB, create_tables, search_dish, view_all_records, search_ingredient, add_dish
+from models import CUISINE_DB, create_tables, search_dish, view_all_records, search_ingredient, add_dish, update_dish
 
 app = Flask(__name__)
 app.config.update(
@@ -86,6 +86,36 @@ def search_by_ingredient(ingredient_name):
         dish_id = row[0]
         results.append(search_dish(dish_id))
     return jsonify(results)
+
+# PUT route: Update a dish ingredient by id
+@app.route('/dishes/<int:dish_id>', methods=['PUT'])
+def put_dish(dish_id):
+    dish_data = request.json
+        
+    if not dish_data:
+        return jsonify({'error': 'No input provided'}), 400
+    
+    update_dish_details = ['name', 'classification', 'methodology', 'origin', 'taste_profile', 'description', 'ingredients']
+    
+    # check if all required fields are present
+    for input in update_dish_details:
+        if input not in dish_data:
+            return jsonify({'error': f'Missing required field: {input}'}), 400
+    
+    new_details = update_dish(dish_id, 
+            dish_data['name'], 
+            dish_data['classification'], 
+            dish_data['methodology'], 
+            dish_data['origin'], 
+            dish_data['taste_profile'], 
+            dish_data['description'], 
+            dish_data['ingredients']
+        )
+
+    if 'error' in new_details:
+        return jsonify(new_details), 404
+    
+    return jsonify(new_details), 200
 
 # DELETE route: Delete a dish by name
 @app.route('/dishes/<string:dish_name>', methods=['DELETE'])
