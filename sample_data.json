@@ -1,0 +1,182 @@
+[
+  {
+    "name": "Adobo",
+    "classification": "Main Dish",
+    "methodology": "Stewing",
+    "origin": "Nationwide",
+    "taste_profile": "Savory, Sour",
+    "description": "Meat marinated and simmered in vinegar, soy sauce, garlic, bay leaves, and peppercorns.",
+    "ingredients": {
+      "meat": ["pork", "chicken"],
+      "vegetable": ["garlic", "bay leaves"]
+    }
+  },
+  {
+    "name": "Sinigang",
+    "classification": "Soup",
+    "methodology": "Boiling",
+    "origin": "Nationwide",
+    "taste_profile": "Sour, Savory",
+    "description": "A sour soup made with tamarind, tomatoes, and various meats or seafood.",
+    "ingredients": {
+      "meat": ["pork"],
+      "vegetable": ["tamarind", "tomato", "kangkong", "radish", "eggplant"]
+    }
+  },
+  {
+    "name": "Kare-Kare",
+    "classification": "Main Dish",
+    "methodology": "Stewing",
+    "origin": "Luzon",
+    "taste_profile": "Savory, Nutty",
+    "description": "Oxtail stew with peanut sauce, served with vegetables and bagoong.",
+    "ingredients": {
+      "meat": ["oxtail", "tripe"],
+      "vegetable": ["eggplant", "string beans", "banana blossom", "peanut"]
+    }
+  },
+  {
+    "name": "Lechon",
+    "classification": "Main Dish",
+    "methodology": "Roasting",
+    "origin": "Cebu",
+    "taste_profile": "Savory, Crispy",
+    "description": "Whole roasted pig with crispy skin and tender meat.",
+    "ingredients": {
+      "meat": ["pork"],
+      "vegetable": ["lemongrass", "garlic", "onion"]
+    }
+  },
+  {
+    "name": "Laing",
+    "classification": "Side Dish",
+    "methodology": "Simmering",
+    "origin": "Bicol",
+    "taste_profile": "Spicy, Creamy",
+    "description": "Dried taro leaves cooked in coconut milk with chili and meat or seafood.",
+    "ingredients": {
+      "meat": ["dried fish"],
+      "vegetable": ["taro leaves", "coconut milk", "chili"]
+    }
+  },
+  {
+    "name": "Pancit Canton",
+    "classification": "Noodle Dish",
+    "methodology": "Stir-frying",
+    "origin": "Nationwide",
+    "taste_profile": "Savory",
+    "description": "Stir-fried egg noodles with vegetables, meat, and soy sauce.",
+    "ingredients": {
+      "meat": ["pork", "chicken", "shrimp"],
+      "vegetable": ["carrot", "cabbage", "green beans"]
+    }
+  },
+  {
+    "name": "Pinakbet",
+    "classification": "Vegetable Dish",
+    "methodology": "Stewing",
+    "origin": "Ilocos",
+    "taste_profile": "Savory, Umami",
+    "description": "Mixed vegetables stewed with bagoong (fermented fish or shrimp paste).",
+    "ingredients": {
+      "meat": ["pork"],
+      "vegetable": ["eggplant", "bitter melon", "okra", "squash", "string beans"]
+    }
+  },
+  {
+    "name": "Bulalo",
+    "classification": "Soup",
+    "methodology": "Boiling",
+    "origin": "Batangas",
+    "taste_profile": "Savory, Rich",
+    "description": "Beef shank soup with bone marrow and vegetables.",
+    "ingredients": {
+      "meat": ["beef shank", "bone marrow"],
+      "vegetable": ["corn", "cabbage", "potato"]
+    }
+  },
+  {
+    "name": "Bicol Express",
+    "classification": "Main Dish",
+    "methodology": "Simmering",
+    "origin": "Bicol",
+    "taste_profile": "Spicy, Creamy",
+    "description": "Pork cooked in coconut milk with chili peppers.",
+    "ingredients": {
+      "meat": ["pork"],
+      "vegetable": ["coconut milk", "chili", "onion", "garlic"]
+    }
+  },
+  {
+    "name": "Menudo",
+    "classification": "Main Dish",
+    "methodology": "Stewing",
+    "origin": "Nationwide",
+    "taste_profile": "Savory, Tomato-based",
+    "description": "Pork stew with liver, potatoes, carrots, and tomato sauce.",
+    "ingredients": {
+      "meat": ["pork", "liver"],
+      "vegetable": ["potato", "carrot", "bell pepper", "tomato sauce"]
+    }
+  },
+  {
+    "name": "Paksiw na Pata",
+    "classification": "Main Dish",
+    "methodology": "Stewing",
+    "origin": "Nationwide",
+    "taste_profile": "Savory, Sweet, Sour",
+    "description": "Pork hock stewed in soy sauce, vinegar, and banana blossoms.",
+    "ingredients": {
+      "meat": ["pork hock"],
+      "vegetable": ["banana blossom", "garlic", "onion"]
+    }
+  },
+  {
+    "name": "Tinola",
+    "classification": "Soup",
+    "methodology": "Boiling",
+    "origin": "Nationwide",
+    "taste_profile": "Savory, Ginger-flavored",
+    "description": "Chicken soup with green papaya and chili leaves in ginger broth.",
+    "ingredients": {
+      "meat": ["chicken"],
+      "vegetable": ["green papaya", "chili leaves", "ginger"]
+    }
+  },
+  {
+    "name": "Dinuguan",
+    "classification": "Main Dish",
+    "methodology": "Stewing",
+    "origin": "Nationwide",
+    "taste_profile": "Savory, Rich",
+    "description": "Pork blood stew with vinegar and spices.",
+    "ingredients": {
+      "meat": ["pork", "pork blood"],
+      "vegetable": ["chili", "onion", "garlic"]
+    }
+  },
+  {
+    "name": "Tortang Talong",
+    "classification": "Vegetable Dish",
+    "methodology": "Frying",
+    "origin": "Nationwide",
+    "taste_profile": "Savory",
+    "description": "Eggplant omelette made by grilling and frying eggplant with egg.",
+    "ingredients": {
+      "meat": [],
+      "vegetable": ["eggplant", "egg", "onion", "tomato"]
+    }
+  },
+  {
+    "name": "Halo-Halo",
+    "classification": "Dessert",
+    "methodology": "Mixing",
+    "origin": "Nationwide",
+    "taste_profile": "Sweet, Cold",
+    "description": "A cold dessert with mixed fruits, beans, jellies, shaved ice, and milk.",
+    "ingredients": {
+      "meat": [],
+      "vegetable": ["sweet beans", "jackfruit", "ube", "coconut", "banana", "leche flan"]
+    }
+  }
+]
