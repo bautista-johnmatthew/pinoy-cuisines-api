@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, render_template
 from flask_flatpages import FlatPages
 import sqlite3
-from models import CUISINE_DB, search_dish, view_all_records, search_ingredient
+from models import CUISINE_DB, create_tables, search_dish, view_all_records, search_ingredient, add_dish
 
 app = Flask(__name__)
 app.config.update(
@@ -24,11 +24,33 @@ def home():
 # Main GET route: List all dishes
 @app.route('/dishes', methods=['GET', 'POST' ])
 def get_dishes():
+    if request.method == 'POST':
+        json_request = request.json
+        result_json = process_json(json_request)
+        
+        return jsonify(result_json)
     
-    if request.method == 'GET':
-        return jsonify(view_all_records())
-    
-    return jsonify({'IN MAINTENANCE'})
+    return jsonify(view_all_records())
+
+def process_json(json_contents):
+    """ Iterates over the json file and adds contents to the database. 
+            Returns an array of the result messages """
+    result_list = []
+
+    for content in json_contents:
+        result = add_dish(content['name'], content['classification'], 
+                content['methodology'], content['origin'], 
+                content['taste_profile'], content['description'], 
+                content['ingredients'])
+        
+        if result == 0:
+            result_list.append({'error', 'Dish cannot be added'})
+        else:
+            result_list.append({'message' : "Dish added successfully", 
+                    'contents' : search_dish(result), 
+                    'location' : f"dishes/{result}"})
+            
+    return result_list
 
 # GET route for a specific dish by title (dynamic routing)
 @app.route('/dishes/<string:dish_name>', methods=['GET'])
@@ -98,4 +120,4 @@ def delete_dish_by_id(dish_id):
     return jsonify({'message': f'Dish with ID {dish_id} deleted successfully.'})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)

@@ -59,6 +59,33 @@ def insert_default_data():
 
     print("✅ Default data inserted successfully.")
 
+def add_dish(name, classification, methodology, origin, taste_profile,
+        description, ingredients):
+    """ Insert a new dish object to the database """
+    conn = sqlite3.connect(CUISINE_DB)
+    cur = conn.cursor()
+    cur.execute("""INSERT INTO dishes (name, classification, methodology, 
+            origin, taste_profile, description) VALUES (?, ?, ?, ?, ?, ?)""", 
+            (name, classification, methodology, origin, taste_profile, description))
+    
+    new_dish_id = cur.lastrowid
+    
+    if (new_dish_id == 0):
+        return new_dish_id
+
+    for meat_value in ingredients['meat']:
+        cur.execute("""INSERT INTO ingredients (dish_id, name, type) VALUES 
+                (?, ?, ?)""", (new_dish_id, meat_value, 'meat'))
+        
+    for veggie_value in ingredients['vegetable']:
+        cur.execute("""INSERT INTO ingredients (dish_id, name, type) VALUES 
+                (?, ?, ?)""", (new_dish_id, veggie_value, 'vegetable'))
+        
+    conn.commit()
+    conn.close()
+    return new_dish_id
+
+
 def search_dish(id):
     """ Search for a dish using the ID and return formatted dictionary """
     conn = sqlite3.connect(CUISINE_DB)
@@ -141,3 +168,9 @@ def view_all_records():
         results.append(dish_dict)
 
     return results
+
+# sinigang_ingredients = {
+#     'meat' : ['Pork'],
+#     'vegetable' : ['Tamarind']
+# }
+# add_dish("Sinigang", "Soup", "Stewing", "N/A", "Sour", "Sour soup", sinigang_ingredients)
