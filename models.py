@@ -46,25 +46,24 @@ def insert_default_data():
              "Stewed meat marinated in vinegar, soy sauce, and garlic."))
     
     latest_id = cur.lastrowid
-    cur.execute(""" INSERT INTO ingredients (dish_id, name, type) VALUES (?, ?, ?)""",
-                (latest_id, "pork", "meat"))
-    cur.execute(""" INSERT INTO ingredients (dish_id, name, type) VALUES (?, ?, ?)""",
-                (latest_id, "garlic", "vegetable"))
+    cur.execute(""" INSERT INTO ingredients (dish_id, name, type) 
+            VALUES (?, ?, ?)""", (latest_id, "pork", "meat"))
+    cur.execute(""" INSERT INTO ingredients (dish_id, name, type) 
+            VALUES (?, ?, ?)""", (latest_id, "garlic", "vegetable"))
     
     conn.commit()
     conn.close()
 
     print("✅ Default data inserted successfully.")
 
-def add_dish(name, classification, methodology, origin, taste_profile,
+def add_dish(name, classification, methodology, origin, taste,
         description, ingredients):
     """ Insert a new dish object to the database """
     conn = connect(CUISINE_DB)
     cur = conn.cursor()
     cur.execute("""INSERT INTO dishes (name, classification, methodology, 
             origin, taste_profile, description) VALUES (?, ?, ?, ?, ?, ?)""", 
-            (name, classification, methodology, origin, taste_profile, description))
-    
+            (name, classification, methodology, origin, taste, description))
     new_dish_id = cur.lastrowid
     
     if (new_dish_id == 0):
@@ -73,7 +72,6 @@ def add_dish(name, classification, methodology, origin, taste_profile,
     for meat_value in ingredients['meat']:
         cur.execute("""INSERT INTO ingredients (dish_id, name, type) VALUES 
                 (?, ?, ?)""", (new_dish_id, meat_value, 'meat'))
-        
     for veggie_value in ingredients['vegetable']:
         cur.execute("""INSERT INTO ingredients (dish_id, name, type) VALUES 
                 (?, ?, ?)""", (new_dish_id, veggie_value, 'vegetable'))
@@ -93,13 +91,13 @@ def search_dish(id):
             (id,)).fetchall()
 
     dict_results = {
-    "name" : results[1],
-    "classification" : results[2],
-    "methodology" : results[3],
-    "origin" : results[4],
-    "taste_profile" : results[5],
-    "description" : results[6],
-    "ingredients" : {
+        "name" : results[1],
+        "classification" : results[2],
+        "methodology" : results[3],
+        "origin" : results[4],
+        "taste_profile" : results[5],
+        "description" : results[6],
+        "ingredients" : {
             "meat": [],
             "vegetable": []
         }
@@ -117,10 +115,8 @@ def search_ingredient(search_ingredient):
     """ Search for dishes that contain a specific ingredient """
     conn = connect(CUISINE_DB)
     cur = conn.cursor()
-    dishes = []
     query = "SELECT dish_id FROM ingredients WHERE name = LOWER(?)"
     search_results = cur.execute(query, (search_ingredient,)).fetchall()
-
     conn.close()
 
     return search_results
@@ -133,32 +129,32 @@ def update_dish(dish_id, name, classification, methodology, origin, taste_profil
     # check if dish exists
     cur.execute("SELECT id FROM dishes WHERE id = ?", (dish_id,))
     dish = cur.fetchone()
+
     if not dish:
         conn.close()
         return {'error': 'Dish not found'}
 
-    # update dish info based on (name, classification, methodology, origin, taste profile, description)
-    cur.execute("""
-        UPDATE dishes SET name = ?, classification = ?, methodology = ?, 
-                origin = ?, taste_profile = ?, description = ? 
-        WHERE id = ?""",
-        (name, classification, methodology, origin, taste_profile, description, dish_id,)
-    )
+    # update dish info
+    cur.execute(""" UPDATE dishes SET name = ?, classification = ?, 
+            methodology = ?, origin = ?, taste_profile = ?, description = ? 
+            WHERE id = ?""", (name, classification, methodology, origin, 
+            taste_profile, description, dish_id,))
 
     # Delete old ingredients
     cur.execute("DELETE FROM ingredients WHERE dish_id = ?", (dish_id,))
 
     # Insert new ingredients
     for meat in ingredients.get("meat", []):
-        cur.execute("""INSERT INTO ingredients (dish_id, name, type) VALUES (?, ?, 'meat')""",
-                    (dish_id, meat))
+        cur.execute("""INSERT INTO ingredients (dish_id, name, type) 
+                VALUES (?, ?, 'meat')""", (dish_id, meat))
 
     for veggie in ingredients.get("vegetable", []):
-        cur.execute("""INSERT INTO ingredients (dish_id, name, type) VALUES (?, ?, 'vegetable')""",
-                    (dish_id, veggie))
+        cur.execute("""INSERT INTO ingredients (dish_id, name, type) 
+                VALUES (?, ?, 'vegetable')""",(dish_id, veggie))
 
     conn.commit()
     conn.close()
+
     return {'message': f'Dish with ID {dish_id} updated successfully.'}
 
 
@@ -171,7 +167,6 @@ def view_all_records():
 
     cur.execute("SELECT * FROM ingredients")
     ingredients = cur.fetchall()
-
     conn.close()
 
     results = []
@@ -202,9 +197,3 @@ def view_all_records():
         results.append(dish_dict)
 
     return results
-
-# sinigang_ingredients = {
-#     'meat' : ['Pork'],
-#     'vegetable' : ['Tamarind']
-# }
-# add_dish("Sinigang", "Soup", "Stewing", "N/A", "Sour", "Sour soup", sinigang_ingredients)
