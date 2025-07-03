@@ -3,37 +3,44 @@ from sqlite3 import connect
 CUISINE_DB = "pinoy_cuisine.db"
 
 # CREATE TABLES
-def create_tables():
+def create_tables(func):
     """Create the necessary tables for the Pinoy Cuisine database."""
-    conn = connect(CUISINE_DB)
-    cur = conn.cursor()
 
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS dishes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL UNIQUE,
-        classification TEXT NOT NULL,
-        methodology TEXT NOT NULL,
-        origin TEXT,
-        taste_profile TEXT NOT NULL,
-        description TEXT NOT NULL
-    )
-    """)
+    def wrapper(*args, **kwargs):
+        conn = connect(CUISINE_DB)
+        cur = conn.cursor()
 
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS ingredients (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        dish_id INTEGER NOT NULL,
-        name TEXT NOT NULL,
-        type TEXT CHECK(type IN ('meat', 'vegetable')) NOT NULL,
-        FOREIGN KEY (dish_id) REFERENCES dishes(id)
-    )
-    """)
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS dishes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE,
+            classification TEXT NOT NULL,
+            methodology TEXT NOT NULL,
+            origin TEXT,
+            taste_profile TEXT NOT NULL,
+            description TEXT NOT NULL
+        )
+        """)
 
-    conn.commit()
-    conn.close()
-    print("✅ Tables created successfully.")
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS ingredients (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            dish_id INTEGER NOT NULL,
+            name TEXT NOT NULL,
+            type TEXT CHECK(type IN ('meat', 'vegetable')) NOT NULL,
+            FOREIGN KEY (dish_id) REFERENCES dishes(id)
+        )
+        """)
 
+        conn.commit()
+        conn.close()
+        print("✅ Tables created successfully.")
+
+        return func(*args, **kwargs)
+    
+    return wrapper
+
+@create_tables
 def insert_default_data():
     """Insert default data into the dishes and ingredients tables."""
     conn = connect(CUISINE_DB)
@@ -56,6 +63,7 @@ def insert_default_data():
 
     print("✅ Default data inserted successfully.")
 
+@create_tables
 def add_dish(name, classification, methodology, origin, taste,
         description, ingredients):
     """ Insert a new dish object to the database """
@@ -81,6 +89,7 @@ def add_dish(name, classification, methodology, origin, taste,
     conn.close()
     return new_dish_id
 
+@create_tables
 def search_dish(id):
     """ Search for a dish using the ID and return formatted dictionary """
     conn = connect(CUISINE_DB)
@@ -107,6 +116,7 @@ def search_dish(id):
 
     return dict_results
 
+@create_tables
 def search_ingredient(search_ingredient):
     """ Search for dishes that contain a specific ingredient """
     conn = connect(CUISINE_DB)
@@ -117,6 +127,7 @@ def search_ingredient(search_ingredient):
 
     return search_results
 
+@create_tables
 def update_dish(dish_id, name, classification, methodology, origin, taste_profile, description, ingredients):
     """ Update a dish details by its ID """
     conn = connect(CUISINE_DB)
@@ -153,7 +164,7 @@ def update_dish(dish_id, name, classification, methodology, origin, taste_profil
 
     return {'message': f'Dish with ID {dish_id} updated successfully.'}
 
-
+@create_tables
 def view_all_records():
     """ Returns all available dishes including the ingredients """
     conn = connect(CUISINE_DB)
