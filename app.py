@@ -1,8 +1,8 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, request, jsonify, render_template
 from flask_flatpages import FlatPages
 from sqlite3 import connect
-from models import CUISINE_DB, search_dish, view_all_records, search_ingredient
-from models import add_dish, update_dish
+from models import CUISINE_DB, search_dish, search_ingredient
+from models import add_dish, update_dish, view_all_records
 
 app = Flask(__name__)
 app.config.update(
@@ -14,12 +14,15 @@ documentation = FlatPages(app)
 
 @app.route("/")
 def home():
+    """ Default route that returns user manual """
     global documentation
+
     return render_template("index.html", pages=documentation)
 
 # Main GET route: List all dishes
 @app.route('/dishes', methods=['GET', 'POST' ])
 def get_dishes():
+    """ Returns all the dishes available in the database """
     if request.method == 'POST':
         json_request = request.json
         result_json = process_json(json_request)
@@ -51,6 +54,7 @@ def process_json(json_contents):
 # GET route for a specific dish by title (dynamic routing)
 @app.route('/dishes/<string:dish_name>', methods=['GET'])
 def get_dish_by_title(dish_name):
+    """ Returns a specific dish by title (dynamic routing)"""
     conn = connect(CUISINE_DB)
     cur = conn.cursor()
     cur.execute("SELECT id FROM dishes WHERE LOWER(name) = LOWER(?)", 
@@ -69,6 +73,7 @@ def get_dish_by_title(dish_name):
 # GET route for a specific dish by ID (dynamic routing)
 @app.route('/dishes/<int:dish_id>', methods=['GET'])
 def get_dish_by_id(dish_id):
+    """ Returns a specific dish by the dish id """
     result = search_dish(dish_id)
 
     if not result:
@@ -78,6 +83,7 @@ def get_dish_by_id(dish_id):
 
 @app.route('/ingredients/<string:ingredient_name>', methods=['GET'])
 def search_by_ingredient(ingredient_name):
+    """ Returns all the dishes containing the given ingredient """
     # Find all dish_ids that use this ingredient
     dish_ids = search_ingredient(ingredient_name)
 
@@ -96,6 +102,7 @@ def search_by_ingredient(ingredient_name):
 # PUT route: Update a dish ingredient by id
 @app.route('/dishes/<int:dish_id>', methods=['PUT'])
 def put_dish(dish_id):
+    """ Updates a dish using the given dish id """
     dish_data = request.json
         
     if not dish_data:
@@ -117,7 +124,7 @@ def put_dish(dish_id):
             dish_data['taste_profile'], 
             dish_data['description'], 
             dish_data['ingredients']
-        )
+    )
 
     if 'error' in new_details:
         return jsonify(new_details), 404
@@ -127,6 +134,7 @@ def put_dish(dish_id):
 # DELETE route: Delete a dish by name
 @app.route('/dishes/<string:dish_name>', methods=['DELETE'])
 def delete_dish(dish_name):
+    """ Deletes a dish based on the given dish name """
     conn = connect(CUISINE_DB)
     cur = conn.cursor()
     cur.execute("SELECT id FROM dishes WHERE LOWER(name) = LOWER(?)", (dish_name,))
@@ -146,6 +154,7 @@ def delete_dish(dish_name):
 # DELETE route: Delete a dish by ID
 @app.route('/dishes/<int:dish_id>', methods=['DELETE'])
 def delete_dish_by_id(dish_id):
+    """ Deletes a dish based on the given dish id """
     conn = connect(CUISINE_DB)
     cur = conn.cursor()
     cur.execute("SELECT id FROM dishes WHERE id = ?", (dish_id,))
