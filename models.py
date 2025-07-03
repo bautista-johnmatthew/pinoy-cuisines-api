@@ -1,11 +1,11 @@
-import sqlite3
+from sqlite3 import connect
 
 CUISINE_DB = "pinoy_cuisine.db"
 
 # CREATE TABLES
 def create_tables():
     """Create the necessary tables for the Pinoy Cuisine database."""
-    conn = sqlite3.connect(CUISINE_DB)
+    conn = connect(CUISINE_DB)
     cur = conn.cursor()
 
     cur.execute("""
@@ -36,7 +36,7 @@ def create_tables():
 
 def insert_default_data():
     """Insert default data into the dishes and ingredients tables."""
-    conn = sqlite3.connect(CUISINE_DB)
+    conn = connect(CUISINE_DB)
     cur = conn.cursor()
 
     # Insert dishes
@@ -59,7 +59,7 @@ def insert_default_data():
 def add_dish(name, classification, methodology, origin, taste_profile,
         description, ingredients):
     """ Insert a new dish object to the database """
-    conn = sqlite3.connect(CUISINE_DB)
+    conn = connect(CUISINE_DB)
     cur = conn.cursor()
     cur.execute("""INSERT INTO dishes (name, classification, methodology, 
             origin, taste_profile, description) VALUES (?, ?, ?, ?, ?, ?)""", 
@@ -85,7 +85,7 @@ def add_dish(name, classification, methodology, origin, taste_profile,
 
 def search_dish(id):
     """ Search for a dish using the ID and return formatted dictionary """
-    conn = sqlite3.connect(CUISINE_DB)
+    conn = connect(CUISINE_DB)
     cur = conn.cursor()
     results = cur.execute("SELECT * FROM dishes WHERE id = ?", 
             (id,)).fetchone()
@@ -115,7 +115,7 @@ def search_dish(id):
 
 def search_ingredient(search_ingredient):
     """ Search for dishes that contain a specific ingredient """
-    conn = sqlite3.connect(CUISINE_DB)
+    conn = connect(CUISINE_DB)
     cur = conn.cursor()
     dishes = []
     query = "SELECT dish_id FROM ingredients WHERE name = LOWER(?)"
@@ -127,7 +127,7 @@ def search_ingredient(search_ingredient):
 
 def update_dish(dish_id, name, classification, methodology, origin, taste_profile, description, ingredients):
     """ Update a dish details by its ID """
-    conn = sqlite3.connect(CUISINE_DB)
+    conn = connect(CUISINE_DB)
     cur = conn.cursor()
 
     # check if dish exists
@@ -163,7 +163,7 @@ def update_dish(dish_id, name, classification, methodology, origin, taste_profil
 
 
 def view_all_records():
-    conn = sqlite3.connect(CUISINE_DB)
+    conn = connect(CUISINE_DB)
     cur = conn.cursor()
 
     cur.execute("SELECT * FROM dishes")

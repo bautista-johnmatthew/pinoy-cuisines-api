@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, request, render_template
 from flask_flatpages import FlatPages
-import sqlite3
-from models import CUISINE_DB, create_tables, search_dish, view_all_records, search_ingredient, add_dish, update_dish
+from sqlite3 import connect
+from models import CUISINE_DB, search_dish, view_all_records, search_ingredient
+from models import add_dish, update_dish
 
 app = Flask(__name__)
 app.config.update(
@@ -12,8 +13,7 @@ app.config.update(
 documentation = FlatPages(app)
 
 def get_db_connection():
-    conn = sqlite3.connect(CUISINE_DB)
-    conn.row_factory = sqlite3.Row
+    conn = connect(CUISINE_DB)
     return conn
 
 @app.route("/")
