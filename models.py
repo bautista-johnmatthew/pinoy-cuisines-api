@@ -69,6 +69,7 @@ def add_dish(name, classification, methodology, origin, taste,
     if (new_dish_id == 0):
         return new_dish_id
 
+    # Insert the ingredients associated to the dish
     for meat_value in ingredients['meat']:
         cur.execute("""INSERT INTO ingredients (dish_id, name, type) VALUES 
                 (?, ?, 'meat')""", (new_dish_id, meat_value))
@@ -79,7 +80,6 @@ def add_dish(name, classification, methodology, origin, taste,
     conn.commit()
     conn.close()
     return new_dish_id
-
 
 def search_dish(id):
     """ Search for a dish using the ID and return formatted dictionary """
@@ -103,11 +103,7 @@ def search_dish(id):
         }
     }
 
-    for ingredient in ingredients:
-        if ingredient[3] == "meat":
-            dict_results["ingredients"]["meat"].append(ingredient[2])
-        elif ingredient[3] == "vegetable":
-            dict_results["ingredients"]["vegetable"].append(ingredient[2])
+    dict_results = find_ingredients(ingredients, id, dict_results)
 
     return dict_results
 
@@ -172,6 +168,7 @@ def view_all_records():
 
     results = []
 
+    # Iterate over available dishes and format each into a dictionary
     for dish in dishes:
         dish_id = dish[0]
 
