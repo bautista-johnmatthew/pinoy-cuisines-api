@@ -100,6 +100,7 @@ def search_dish(id):
             (id,)).fetchall()
 
     dict_results = {
+        "id" : results[0],
         "name" : results[1],
         "classification" : results[2],
         "methodology" : results[3],
@@ -184,6 +185,7 @@ def view_all_records():
         dish_id = dish[0]
 
         dish_dict = {
+            "id" : dish[0],
             "name": dish[1],
             "classification": dish[2],
             "methodology": dish[3],
