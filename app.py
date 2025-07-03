@@ -12,10 +12,6 @@ app.config.update(
 )
 documentation = FlatPages(app)
 
-def get_db_connection():
-    conn = connect(CUISINE_DB)
-    return conn
-
 @app.route("/")
 def home():
     global documentation
@@ -55,7 +51,7 @@ def process_json(json_contents):
 # GET route for a specific dish by title (dynamic routing)
 @app.route('/dishes/<string:dish_name>', methods=['GET'])
 def get_dish_by_title(dish_name):
-    conn = get_db_connection()
+    conn = connect(CUISINE_DB)
     cur = conn.cursor()
     cur.execute("SELECT id FROM dishes WHERE LOWER(name) = LOWER(?)", (dish_name,))
     dish = cur.fetchone()
@@ -120,7 +116,7 @@ def put_dish(dish_id):
 # DELETE route: Delete a dish by name
 @app.route('/dishes/<string:dish_name>', methods=['DELETE'])
 def delete_dish(dish_name):
-    conn = get_db_connection()
+    conn = connect(CUISINE_DB)
     cur = conn.cursor()
     cur.execute("SELECT id FROM dishes WHERE LOWER(name) = LOWER(?)", (dish_name,))
     dish = cur.fetchone()
@@ -136,7 +132,7 @@ def delete_dish(dish_name):
 # DELETE route: Delete a dish by ID
 @app.route('/dishes/<int:dish_id>', methods=['DELETE'])
 def delete_dish_by_id(dish_id):
-    conn = get_db_connection()
+    conn = connect(CUISINE_DB)
     cur = conn.cursor()
     cur.execute("SELECT id FROM dishes WHERE id = ?", (dish_id,))
     dish = cur.fetchone()
