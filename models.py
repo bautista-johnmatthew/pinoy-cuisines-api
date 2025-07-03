@@ -71,10 +71,10 @@ def add_dish(name, classification, methodology, origin, taste,
 
     for meat_value in ingredients['meat']:
         cur.execute("""INSERT INTO ingredients (dish_id, name, type) VALUES 
-                (?, ?, ?)""", (new_dish_id, meat_value, 'meat'))
+                (?, ?, 'meat')""", (new_dish_id, meat_value))
     for veggie_value in ingredients['vegetable']:
         cur.execute("""INSERT INTO ingredients (dish_id, name, type) VALUES 
-                (?, ?, ?)""", (new_dish_id, veggie_value, 'vegetable'))
+                (?, ?, 'vegetable')""", (new_dish_id, veggie_value))
         
     conn.commit()
     conn.close()
@@ -159,6 +159,7 @@ def update_dish(dish_id, name, classification, methodology, origin, taste_profil
 
 
 def view_all_records():
+    """ Returns all available dishes including the ingredients """
     conn = connect(CUISINE_DB)
     cur = conn.cursor()
 
@@ -187,13 +188,18 @@ def view_all_records():
             }
         }
 
-        for ingredient in ingredients:
-            if ingredient[1] == dish_id:
-                if ingredient[3] == "meat":
-                    dish_dict["ingredients"]["meat"].append(ingredient[2])
-                elif ingredient[3] == "vegetable":
-                    dish_dict["ingredients"]["vegetable"].append(ingredient[2])
-
+        dish_dict = find_ingredients(ingredients, dish_id, dish_dict)
         results.append(dish_dict)
 
     return results
+
+def find_ingredients(ingredients, dish_id, dish_dict):
+    """ Helper function to search ingredients related to a dish """
+    for ingredient in ingredients:
+        if ingredient[1] == dish_id:
+            if ingredient[3] == "meat":
+                dish_dict["ingredients"]["meat"].append(ingredient[2])
+            elif ingredient[3] == "vegetable":
+                dish_dict["ingredients"]["vegetable"].append(ingredient[2])
+
+    return dish_dict
