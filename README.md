@@ -14,3 +14,4 @@ View the api documentation in the url hosted using render: [pinoy-cuisines](http
 - @banzali-gracegabrielle
 - @managbanag-johnmark
 - @espinola-frankiejosh
+- @bautista-johnmatthew
