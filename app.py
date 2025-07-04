@@ -47,7 +47,8 @@ def process_json(json_contents):
         else:
             result_list.append({'message' : "Dish added successfully", 
                     'contents' : search_dish(result), 
-                    'location' : f"dishes/{result}"})
+                    'location' : f"https://pinoy-cuisines-api.onrender.com/" 
+                            + "dishes/{result}"})
             
     return result_list
 
