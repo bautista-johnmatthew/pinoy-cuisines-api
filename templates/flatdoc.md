@@ -5,39 +5,112 @@ title: Pinoy Cuisines API
 
 A RESTful API for browsing Filipino dishes and their ingredients.
 
----
 
-## Endpoints
+# Endpoints
 
-### GET `/dishes`
+### DISPLAY ALL DISHES
+Displays all dishes in the database.
 
-Returns all dishes.
+`https://pinoy-cuisines-api.onrender.com/dishes`
 
-### POST `/dishes`
 
-Add new dishes (in JSON array format).
+### SEARCH DISHES BY INGREDIENTS
+Search for dishes using a specific ingredient. All entries with searched
+ingredient will appear.
 
-### GET `/dishes/{dish_name}`
+`https://pinoy-cuisines-api.onrender.com/ingredients/{ingredient_name}`
 
-Get dish details by name (case-insensitive).
+### ADD NEW DISHES
 
-### GET `/dishes/{id}`
+Add new dishes to the database. (through Post Request 'POST')
 
-Get dish details by ID.
+JSON File should be formatted as:
 
-### PUT `/dishes/{id}`
 
-Update a dish's information and ingredients.
+        {
+            "name": "Bulalo",
+            "classification": "Soup",
+            "methodology": "Boiling",
+            "origin": "Batangas",
+            "taste_profile": "Savory, Rich",
+            "description": "Beef shank soup with bone marrow and vegetables.",
+            "ingredients": {
+            "meat": ["beef shank", "bone marrow"],
+            "vegetable": ["corn", "cabbage", "potato"]
+            }
+        }
 
-### DELETE `/dishes/{id}` or `/dishes/{dish_name}`
+### SEARCH DISH DETAILS BY NAME
 
-Delete a dish.
+Get specific dish details by name (case-insensitive).
 
-### GET `/ingredients/{ingredient_name}`
+`https://pinoy-cuisines-api.onrender.com/dishes/{dish_name}`
 
-Search for dishes using a specific ingredient.
+Output should be seen as:
 
----
+
+        {
+        "classification": "Meryenda",
+        "description": "Buko ni Juan.",
+        "id": 4,
+        "ingredients": {
+            "meat": [
+            "None"
+            ],
+            "vegetable": [
+            "None"
+            ]
+        },
+        "methodology": "Shake",
+        "name": "Buko Shake",
+        "origin": "Nationwide",
+        "taste_profile": "Sweet"
+        }
+
+### SEARCH DISH DETAILS BY ID
+
+Get specific dish details by ID.
+
+`https://pinoy-cuisines-api.onrender.com/dishes/{id}`
+
+Output should be seen as:
+
+
+        {
+        "classification": "Main Dish",
+        "description": "Meat marinated and simmered in vinegar, soy sauce, garlic, bay leaves, and peppercorns.",
+        "id": 2,
+        "ingredients": {
+            "meat": [
+            "pork",
+            "chicken"
+            ],
+            "vegetable": [
+            "garlic",
+            "bay leaves"
+            ]
+        },
+        "methodology": "Stewing",
+        "name": "Adobo",
+        "origin": "Nationwide",
+        "taste_profile": "Savory, Sour"
+        }
+
+
+### UPDATE DISH DETAILS
+
+Update a dish's information and ingredients (through Post Request 'PUT').
+
+- Update Dish Details By ID 
+- Update Dish Details By Name
+
+
+### DELETE DISHES
+
+Delete a dish (through Post Request 'DELETE').
+
+- Delete Dish Details By ID 
+- Delete Dish Details By Name
 
 ## Notes
 
