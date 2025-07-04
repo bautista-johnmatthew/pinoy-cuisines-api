@@ -59,14 +59,14 @@ def get_dish_by_title(dish_name):
     conn = connect(CUISINE_DB)
     cur = conn.cursor()
     cur.execute("SELECT id FROM dishes WHERE LOWER(name) = LOWER(?)", 
-            (dish_name))
+            (dish_name,))
     dish = cur.fetchone()
 
     if not dish:
         conn.close()
         return jsonify({'error': 'Dish not found'}), 404
     
-    result = search_dish(dish['id'])
+    result = search_dish(dish[0])
     conn.close()
 
     return jsonify(result)
@@ -138,15 +138,16 @@ def delete_dish(dish_name):
     """ Deletes a dish based on the given dish name """
     conn = connect(CUISINE_DB)
     cur = conn.cursor()
-    cur.execute("SELECT id FROM dishes WHERE LOWER(name) = LOWER(?)", (dish_name,))
+    cur.execute("SELECT id FROM dishes WHERE LOWER(name) = LOWER(?)", 
+            (dish_name,))
     dish = cur.fetchone()
 
     if not dish:
         conn.close()
         return jsonify({'error': 'Dish not found'}), 404
     
-    cur.execute("DELETE FROM ingredients WHERE dish_id = ?", (dish['id'],))
-    cur.execute("DELETE FROM dishes WHERE id = ?", (dish['id'],))
+    cur.execute("DELETE FROM ingredients WHERE dish_id = ?", (dish[0],))
+    cur.execute("DELETE FROM dishes WHERE id = ?", (dish[0],))
     conn.commit()
     conn.close()
 
@@ -165,12 +166,12 @@ def delete_dish_by_id(dish_id):
         conn.close()
         return jsonify({'error': 'Dish not found'}), 404
     
-    cur.execute("DELETE FROM ingredients WHERE dish_id = ?", (dish['id'],))
-    cur.execute("DELETE FROM dishes WHERE id = ?", (dish['id'],))
+    cur.execute("DELETE FROM ingredients WHERE dish_id = ?", (dish[0],))
+    cur.execute("DELETE FROM dishes WHERE id = ?", (dish[0],))
     conn.commit()
     conn.close()
 
-    return jsonify({'message': f'Dish with ID {dish_id} deleted successfully.'})
+    return jsonify({'message': f'Dish ID {dish_id} deleted successfully.'})
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)
