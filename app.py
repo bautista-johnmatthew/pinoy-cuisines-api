@@ -59,7 +59,7 @@ def get_dish_by_title(dish_name):
     conn = connect(CUISINE_DB)
     cur = conn.cursor()
     cur.execute("SELECT id FROM dishes WHERE LOWER(name) = LOWER(?)", 
-            (dish_name))
+            (dish_name,))
     dish = cur.fetchone()
 
     if not dish:
