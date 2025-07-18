@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from flask_flatpages import FlatPages
+from flask_cors import CORS
 from sqlite3 import connect
 from models import CUISINE_DB, search_dish, search_ingredient
 from models import add_dish, update_dish, view_all_records
@@ -10,6 +11,7 @@ app.config.update(
     FLATPAGES_ROOT='templates',
     FLATPAGES_AUTO_RELOAD=True
 )
+CORS(app)
 documentation = FlatPages(app)
 
 @app.route("/")
@@ -59,14 +61,14 @@ def get_dish_by_title(dish_name):
     conn = connect(CUISINE_DB)
     cur = conn.cursor()
     cur.execute("SELECT id FROM dishes WHERE LOWER(name) = LOWER(?)", 
-            (dish_name))
+            (dish_name,))
     dish = cur.fetchone()
 
     if not dish:
         conn.close()
         return jsonify({'error': 'Dish not found'}), 404
     
-    result = search_dish(dish['id'])
+    result = search_dish(dish[0])
     conn.close()
 
     return jsonify(result)
@@ -145,8 +147,8 @@ def delete_dish(dish_name):
         conn.close()
         return jsonify({'error': 'Dish not found'}), 404
     
-    cur.execute("DELETE FROM ingredients WHERE dish_id = ?", (dish['id'],))
-    cur.execute("DELETE FROM dishes WHERE id = ?", (dish['id'],))
+    cur.execute("DELETE FROM ingredients WHERE dish_id = ?", (dish[0],))
+    cur.execute("DELETE FROM dishes WHERE id = ?", (dish[0],))
     conn.commit()
     conn.close()
 
@@ -166,7 +168,7 @@ def delete_dish_by_id(dish_id):
         return jsonify({'error': 'Dish not found'}), 404
     
     cur.execute("DELETE FROM ingredients WHERE dish_id = ?", (dish['id'],))
-    cur.execute("DELETE FROM dishes WHERE id = ?", (dish['id'],))
+    cur.execute("DELETE FROM dishes WHERE id = ?", (dish[0],))
     conn.commit()
     conn.close()
 
