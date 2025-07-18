@@ -98,6 +98,10 @@ def search_dish(id):
             (id,)).fetchone()
     ingredients = cur.execute("SELECT * FROM ingredients WHERE dish_id = ?", 
             (id,)).fetchall()
+    
+    if not results:
+        conn.close()
+        return {'error': 'Dish not found'}
 
     dict_results = {
         "id" : results[0],
