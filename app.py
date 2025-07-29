@@ -167,8 +167,8 @@ def delete_dish_by_id(dish_id):
         conn.close()
         return jsonify({'error': 'Dish not found'}), 404
     
-    cur.execute("DELETE FROM ingredients WHERE dish_id = ?", (dish['id'],))
-    cur.execute("DELETE FROM dishes WHERE id = ?", (dish[0],))
+    cur.execute("DELETE FROM ingredients WHERE dish_id = ?", (dish_id,))
+    cur.execute("DELETE FROM dishes WHERE id = ?", (dish_id,))
     conn.commit()
     conn.close()
 
