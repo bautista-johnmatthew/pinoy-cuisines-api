@@ -140,7 +140,8 @@ def delete_dish(dish_name):
     """ Deletes a dish based on the given dish name """
     conn = connect(CUISINE_DB)
     cur = conn.cursor()
-    cur.execute("SELECT id FROM dishes WHERE LOWER(name) = LOWER(?)", (dish_name,))
+    cur.execute("SELECT id FROM dishes WHERE LOWER(name) = LOWER(?)", 
+            (dish_name,))
     dish = cur.fetchone()
 
     if not dish:
@@ -172,7 +173,7 @@ def delete_dish_by_id(dish_id):
     conn.commit()
     conn.close()
 
-    return jsonify({'message': f'Dish with ID {dish_id} deleted successfully.'})
+    return jsonify({'message': f'Dish ID {dish_id} deleted successfully.'})
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5000)
